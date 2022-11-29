@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "simsontonek"
+version = "0.0.1"
+dependencies = [
+    "numpy",
+    "h5py",
+    "pre-commit"
+]
+
+
+[tool.black]
+line-length = 79
+inlcude = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
