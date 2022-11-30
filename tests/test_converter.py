@@ -1,4 +1,5 @@
 import numpy.polynomial.chebyshev
+from os.path import join
 
 from simsontonek.converter import (
     Converter,
@@ -42,14 +43,20 @@ def test_fft_interpolation():
 
 def test_converter():
 
-    simson = (
-        "C:\\Users\\tiamm\\Nek5000\\run\\generate_planes\\wide_data.hdf5"
-    )
+    simson = "C:\\Users\\tiamm\\Nek5000\\run\\generate_planes\\wide_data.hdf5"
     inlet_y = np.genfromtxt(
-        "C:\\Users\\tiamm\\Nek5000\\run\\tbl\\wmles_tsfp\\simson_n2\\inlet_y.txt",
+        join(
+            "C:\\Users\\tiamm\\Nek5000\\run\\tbl\\wmles_tsfp",
+            "simson_n2",
+            "inlet_y.txt",
+        )
     )
     inlet_z = np.genfromtxt(
-        "C:\\Users\\tiamm\\Nek5000\\run\\tbl\\wmles_tsfp\\simson_n2\\inlet_z.txt",
+        join(
+            "C:\\Users\\tiamm\\Nek5000\\run\\tbl\\wmles_tsfp",
+            "simson_n2",
+            "inlet_z.txt",
+        )
     )
     Converter(
         simson,

@@ -96,8 +96,11 @@ class Converter:
         zl = data.attrs["zl"]
         dstar = data.attrs["dstar"]
 
+        # Free stream values to be added on to of the tbl
+        # Note, index 0 here since values in Simson are inverted
         vinf = np.mean(data["v"][0, :, :]) / velocity_scale
         uinf = np.mean(data["u"][0, :, :]) / velocity_scale
+        freestream = {"u": uinf, "v": vinf, "w": 0}
 
         # rescale with dstar
         yl = 2 / dstar
@@ -128,10 +131,10 @@ class Converter:
 
         nplanes = 2
         for t in range(nplanes):
-            for lcomp in ["u", "v", "w"]:
+            for component in ["u", "v", "w"]:
 
                 # Read the velocity values from Simson
-                u = np.flipud(data[lcomp][:, :, t] / velocity_scale)
+                u = np.flipud(data[component][:, :, t] / velocity_scale)
 
                 # Values interpolated in y, for each z value of the
                 # Simson grid.
@@ -162,7 +165,13 @@ class Converter:
                 )
 
                 u_nek = np.vstack(
-                    (u_nek, np.full((yn.shape[0] - y_ind, yn.shape[1]), uinf)),
+                    (
+                        u_nek,
+                        np.full(
+                            (yn.shape[0] - y_ind, yn.shape[1]),
+                            freestream[component],
+                        ),
+                    ),
                 )
 
                 u_nek = np.real(u_nek)
@@ -170,7 +179,7 @@ class Converter:
                 # Write
                 # Transposing because writing is in row-major order
                 # and fortran assumes column-major
-                u_nek.T.tofile(join(write_path, f"b{lcomp}in_{t}"))
+                u_nek.T.tofile(join(write_path, f"b{component}in_{t}"))
 
                 continue
 
