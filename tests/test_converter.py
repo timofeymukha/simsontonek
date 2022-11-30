@@ -42,16 +42,21 @@ def test_fft_interpolation():
 
 def test_converter():
 
-    inlet_y = np.linspace(0, 20, 100)
-    inlet_z = np.linspace(0, 100, 250)
     simson = (
-        "C:\\Users\\tiamm\\Software\\inflow_interpolation\\simson_data.hdf5"
+        "C:\\Users\\tiamm\\Nek5000\\run\\generate_planes\\wide_data.hdf5"
+    )
+    inlet_y = np.genfromtxt(
+        "C:\\Users\\tiamm\\Nek5000\\run\\tbl\\wmles_tsfp\\simson_n2\\inlet_y.txt",
+    )
+    inlet_z = np.genfromtxt(
+        "C:\\Users\\tiamm\\Nek5000\\run\\tbl\\wmles_tsfp\\simson_n2\\inlet_z.txt",
     )
     Converter(
         simson,
+        "C:\\Users\\tiamm\\Nek5000\\run\\tbl\\wmles_tsfp\\test_inflow\\planes",
         inlet_y,
         inlet_z,
-        length_scale=1,
+        length_scale=14.2172,
         velocity_scale=1,
         shift_y=0,
         shift_z=0,

@@ -3,6 +3,7 @@ from numpy.fft import fft, fftshift
 from numpy.polynomial.chebyshev import Chebyshev
 from scipy.interpolate import BarycentricInterpolator
 import h5py
+from os.path import join
 
 __all__ = ["Converter", "glc_points"]
 
@@ -95,7 +96,8 @@ class Converter:
         zl = data.attrs["zl"]
         dstar = data.attrs["dstar"]
 
-        #        vinf = np.mean(data["v"][:, 0, :]) / velocity_scale
+        vinf = np.mean(data["v"][0, :, :]) / velocity_scale
+        uinf = np.mean(data["u"][0, :, :]) / velocity_scale
 
         # rescale with dstar
         yl = 2 / dstar
@@ -139,6 +141,7 @@ class Converter:
                 interp.set_yi(u, axis=0)
                 utemp = interp(yn[:y_ind, 0])
 
+                # FFT in z
                 uhat = np.fft.fft(utemp, axis=1)
                 uhat = np.hstack(
                     [uhat, np.conjugate(uhat[:, int(nz / 2)][:, None])]
@@ -146,6 +149,7 @@ class Converter:
                 freq = np.fft.fftfreq(nz, d=z[1] - z[0])
                 freq = np.concatenate([freq, [-freq[int(nz / 2)]]])
 
+                # Interpolate using inverse fft
                 z3d = np.expand_dims(inlet_z, axis=(0, 1))
                 u_nek = (
                     1
@@ -156,7 +160,17 @@ class Converter:
                         axis=1,
                     )
                 )
+
+                u_nek = np.vstack(
+                    (u_nek, np.full((yn.shape[0] - y_ind, yn.shape[1]), uinf)),
+                )
+
                 u_nek = np.real(u_nek)
+
+                # Write
+                # Transposing because writing is in row-major order
+                # and fortran assumes column-major
+                u_nek.T.tofile(join(write_path, f"b{lcomp}in_{t}"))
 
                 continue
 

@@ -8,7 +8,9 @@ version = "0.0.1"
 dependencies = [
     "numpy",
     "h5py",
-    "pre-commit"
+    "pre-commit",
+    "scipy"
+
 ]
 
 
