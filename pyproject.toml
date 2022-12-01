@@ -9,10 +9,15 @@ dependencies = [
     "numpy",
     "h5py",
     "pre-commit",
-    "scipy"
+    "scipy",
+    "matplotlib"
 
 ]
 
+[project.scripts]
+simsontonek_simson_stats = "simsontonek.bin.simson_stats:main"
+simsontonek_convert_to_hdf5 = "simsontonek.bin.convert_to_hdf5:main"
+simsontonek_execute = "simsontonek.bin.execute:main"
 
 [tool.black]
 line-length = 79

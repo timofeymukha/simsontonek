@@ -15,6 +15,8 @@ def glc_points(n: int) -> np.ndarray:
 def chebyshev_interpolation(data: np.ndarray, nodes: np.ndarray, xn: float):
     """This does not seem to work very well, and probably barycentric
     interpolation should be used instead.
+
+    Currently not used in the code.
     """
     # polynomial order
     n = data.size - 1
@@ -24,6 +26,7 @@ def chebyshev_interpolation(data: np.ndarray, nodes: np.ndarray, xn: float):
 
     poly = Chebyshev.basis(n).deriv()
 
+    # map to [-1, 1]
     chi = (2 * nodes - (xs + xe)) / (xe - xs)
     xnc = (2 * xn - (xs + xe)) / (xe - xs)
 
@@ -44,6 +47,8 @@ def fft_interpolate(u: np.ndarray, x: np.ndarray, xn: np.ndarray):
     """Interpolates u onto xn using FFT.
 
     Note: the size of u and x *must* be an even number!
+
+    Currently not used in the code.
     """
     NN = x.size
     N = int(NN - 1)
