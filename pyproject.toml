@@ -10,12 +10,14 @@ dependencies = [
     "h5py",
     "pre-commit",
     "scipy",
-    "matplotlib"
-
+    "matplotlib",
+    "black",
+    "flake8"
 ]
 
 [project.scripts]
 simsontonek_simson_stats = "simsontonek.bin.simson_stats:main"
+simsontonek_nek_stats = "simsontonek.bin.nek_stats:main"
 simsontonek_convert_to_hdf5 = "simsontonek.bin.convert_to_hdf5:main"
 simsontonek_execute = "simsontonek.bin.execute:main"
 
