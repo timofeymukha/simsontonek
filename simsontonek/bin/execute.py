@@ -65,21 +65,9 @@ def main():
     output_path = args.output
     length_scale = args.lengthscale
     velocity_scale = args.velocityscale
+    inlet_y = np.genfromtxt(args.inlety)
+    inlet_z = np.genfromtxt(args.inletz)
 
-    inlet_y = np.genfromtxt(
-        join(
-            "C:\\Users\\tiamm\\Nek5000\\run\\tbl\\wmles_tsfp",
-            "simson_n2",
-            "inlet_y.txt",
-        )
-    )
-    inlet_z = np.genfromtxt(
-        join(
-            "C:\\Users\\tiamm\\Nek5000\\run\\tbl\\wmles_tsfp",
-            "simson_n2",
-            "inlet_z.txt",
-        )
-    )
     Converter(
         file_path,
         output_path,
