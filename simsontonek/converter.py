@@ -3,7 +3,10 @@ from numpy.fft import fft, fftshift
 from numpy.polynomial.chebyshev import Chebyshev
 from scipy.interpolate import BarycentricInterpolator
 import h5py
+from tqdm import trange
+from mpi4py import MPI
 from os.path import join
+from simsontonek.chunks import chunks_and_offsets
 
 __all__ = ["Converter", "glc_points"]
 
@@ -93,6 +96,10 @@ class Converter:
         shift_z: float,
     ) -> None:
 
+        comm = MPI.COMM_WORLD
+        rank = comm.Get_rank()
+        nprocs = comm.Get_size()
+
         data = h5py.File(simson_data_path, "r")
         nplanes = int(data.attrs["nplanes"])
 
@@ -134,12 +141,21 @@ class Converter:
 
         interp = BarycentricInterpolator(y)
 
-        nplanes = 2
-        for t in range(nplanes):
+        nplanes = 32
+
+        [chunks, offsets] = chunks_and_offsets(nprocs, nplanes)
+
+        if rank == 0:
+            loop_range = trange(chunks[rank])
+        else:
+            loop_range = range(chunks[rank])
+
+        for t in loop_range:
+            position = offsets[rank] + t
             for component in ["u", "v", "w"]:
 
                 # Read the velocity values from Simson
-                u = np.flipud(data[component][:, :, t] / velocity_scale)
+                u = np.flipud(data[component][:, :, position] / velocity_scale)
 
                 # Values interpolated in y, for each z value of the
                 # Simson grid.
@@ -184,8 +200,8 @@ class Converter:
                 # Write
                 # Transposing because writing is in row-major order
                 # and fortran assumes column-major
-                u_nek.T.tofile(join(write_path, f"b{component}in_{t}"))
+                u_nek.T.tofile(join(write_path, f"b{component}in_{position}"))
 
                 continue
 
-        pass
+        comm.Barrier()
