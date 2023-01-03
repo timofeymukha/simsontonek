@@ -73,8 +73,6 @@ class Converter:
 
         interp = BarycentricInterpolator(y)
 
-        nplanes = 32
-
         [chunks, offsets] = chunks_and_offsets(nprocs, nplanes)
 
         if rank == 0:
