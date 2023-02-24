@@ -90,7 +90,7 @@ def main():
 
     parser.add_argument(
         "--nplanes",
-        type=str,
+        type=int,
         help="The number of planes (i.e. timesteps) in the data",
         required=True,
     )
